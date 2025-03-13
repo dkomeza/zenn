@@ -8,6 +8,7 @@ services:
       dockerfile: Dockerfile.dev
       additional_contexts:
         - shared=./shared
+    restart: unless-stopped
 
     healthcheck:
       test:
@@ -34,10 +35,13 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      cache:
+        condition: service_healthy
 
   web:
     container_name: zenn-web
     image: nginx:alpine
+    restart: unless-stopped
 
     ports:
       - "8080:80"
@@ -55,6 +59,7 @@ services:
   db:
     container_name: zenn-db
     image: postgres:13
+    restart: unless-stopped
 
     environment:
       POSTGRES_USER: zenn
@@ -71,6 +76,24 @@ services:
       - zenn-db-data:/var/lib/postgresql/data
     networks:
       - backend
+  cache:
+    container_name: zenn-redis
+    image: redis:alpine
+    restart: unless-stopped
+    command: redis-server --save 60 1 --appendonly yes
+
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+    networks:
+      - backend
+
+    volumes:
+      - zenn-redis-data:/data
 
 networks:
   proxy:
@@ -80,3 +103,6 @@ networks:
 
 volumes:
   zenn-db-data:
+    driver: local
+  zenn-redis-data:
+    driver: local
