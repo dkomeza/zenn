@@ -3,6 +3,7 @@
   "name": "zenn",
   "module": "app.ts",
   "type": "module",
+  "version": "0.0.1",
   "scripts": {
     "dev": "bun run --hot src/app.ts"
   },

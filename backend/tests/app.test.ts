@@ -1,15 +1,9 @@
 import { test, expect } from "bun:test";
 import "@/app";
 
-const PORT = process.env.PORT || 5000;
+import { healthCheck } from "@shared/api";
 
-test("GET /status", async () => {
-  try {
-    const response = await fetch(`http://localhost:${PORT}/status`);
-    const body = await response.json();
-    expect(response.status).toBe(200);
-    expect(body).toEqual({ status: "Okay" });
-  } catch (error) {
-    console.error(error);
-  }
+test("Health check", async () => {
+  const health = await healthCheck();
+  expect(health.status).toBe("ok");
 });
