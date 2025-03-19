@@ -16,7 +16,7 @@ services:
           "CMD",
           "bun",
           "-e",
-          "fetch('http://127.0.0.1:5000/status').then((r) => {if (r.status !== 200) throw new Error(r.status)})",
+          "fetch('http://127.0.0.1:5000/health').then((r) => {if (r.status !== 200) throw new Error(r.status)})",
         ]
       interval: 5s
       timeout: 5s

@@ -7,14 +7,6 @@ const PORT = Bun.env.PORT || 5000;
 const VERSION = getPackageVersion();
 
 // Required to make sure that the container is healthy
-app.get("/status", (_req, res) => {
-  res
-    .send({
-      status: "Okay",
-    })
-    .status(200);
-});
-
 app.get("/health", (_req, res) => {
   const healthCheckResponse: HealthCheckResponse = {
     status: "ok",
